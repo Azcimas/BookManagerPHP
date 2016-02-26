@@ -2,10 +2,11 @@
 
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
-$db = new PDO('mysql:host=localhost;dbname=books;charset=utf8', 'root', 'azcim1479');
+$db = new PDO('mysql:host=localhost;dbname=books;charset=utf8', 'user', 'password');
 
 // Book Adding
 if (isset($_POST["content_txt"]) && isset($_POST["year_txt"])) {
+    // Validation 
     if (!is_numeric($_POST["year_txt"]) || strlen($_POST["year_txt"]) != 4 ||
             $_POST["year_txt"] < 1 || $_POST["year_txt"] != round($_POST["year_txt"])) {
         $output3 = json_encode([
@@ -13,12 +14,12 @@ if (isset($_POST["content_txt"]) && isset($_POST["year_txt"])) {
         ]);
         echo $output3;
     } else {
-        // dodawanie nazwy i roku ksiazki
+        // Inserting data into db.
         $insert_row = $db->query("INSERT INTO books(Title, Year) VALUES('"
                 . $_POST["content_txt"] . "', " . $_POST["year_txt"] . ")");
         $book_inserted_id = $db->lastInsertId();
-        // dodawanie autorow
         
+        // Adding author(s) to db.
         $author_arr = explode(',', $_POST["author_txt"]);
         $authors = array_map('trim', $author_arr);
         if ($authors[0] == ''){
@@ -39,6 +40,7 @@ if (isset($_POST["content_txt"]) && isset($_POST["year_txt"])) {
                     . $author_inserted_id . "," . $book_inserted_id . ")");
         }
     }
+    // Output sent to AJAX
     if ($insert_row) {
         $my_id = $book_inserted_id;
         $output = json_encode([
@@ -95,6 +97,7 @@ if (isset($_POST["content_txt"]) && isset($_POST["year_txt"])) {
         "Author2" => $authors2
     ]);
     echo $output2;
+
 // Author Delete
 } elseif (isset($_POST["authorToDelete"])) {
 
