@@ -27,7 +27,7 @@
                 <th>Autorzy</th>
             </tr>
         <?php 
-        $db = new PDO('mysql:host=localhost;dbname=books;charset=utf8', 'root', 'azcim1479');
+        $db = new PDO('mysql:host=localhost;dbname=books;charset=utf8', 'root', 'xxxxx');
         $select = 'SELECT b.id, Title, Year, GROUP_CONCAT(DISTINCT Name ORDER BY Name) as con_list
                    FROM authors a, books b, authors_to_books c
                    WHERE a.id = c.author_id AND b.id = c.book_id
